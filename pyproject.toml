@@ -1,0 +1,33 @@
+[project]
+name = "CountyStatAirflow"
+version = "0.0.11"
+authors = [
+  { name="Daniel Andrus", email="Daniel.Andrus@AlleghenyCounty.us" },
+]
+description = "Package employed by Allegheny County CountyStat team for Airflow orchestration operations"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 1 - Planning",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Natural Language :: English",
+    "Topic :: Software Development :: Bug Tracking"
+]
+
+[project.urls]
+Homepage = "https://github.com/Allegheny-CountyStats/Airflow-Docker/CountyStat-Airflow"
+Issues = "https://github.com/Allegheny-CountyStats/Airflow-Docker/CountyStat-Airflow/issues"
+
+[build-system]
+requires = ["hatchling >= 1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/CountyStatAirflow"]
