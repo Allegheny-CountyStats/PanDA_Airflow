@@ -25,14 +25,13 @@ def tableau_skip(**_):
     start_window = 20  # 8 PM
     end_window = 23 # 11 PM
     in_time_window = start_window <= int(now.strftime("%H")) <= end_window
+    #
+    # if is_tuesday and is_third_week and in_time_window:
+    #     print("skip_tableau")
+    # else:
+    #     print("tableau_tasks")
 
     if is_tuesday and is_third_week and in_time_window:
-        print("skip_tableau")
+        return "skip_tableau"
     else:
-        print("tableau_tasks")
-
-    # if is_tuesday and is_third_week and in_time_window:
-    #     return "skip_tableau"
-    # else:
-    #     return "tableau_tasks"
-tableau_skip()
+        return "tableau_tasks"
