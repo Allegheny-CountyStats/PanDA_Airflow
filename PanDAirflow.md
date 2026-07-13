@@ -4,8 +4,6 @@ Python package used by CountyStat for Airflow operations:
 * DevTest
 * Slack Alert
 
-[Package building reference](https://packaging.python.org/en/latest/tutorials/packaging-projects/)
-
 ## DevTest
 
 

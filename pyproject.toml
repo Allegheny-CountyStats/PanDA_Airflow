@@ -1,11 +1,11 @@
 [project]
-name = "CountyStatAirflow"
-version = "0.0.11"
+name = "PanDAirflow"
+version = "0.1.3"
 authors = [
   { name="Daniel Andrus", email="Daniel.Andrus@AlleghenyCounty.us" },
 ]
-description = "Package employed by Allegheny County CountyStat team for Airflow orchestration operations"
-readme = "README.md"
+description = "Package employed by Allegheny County's Performance and Data Analytics division (PanDA) for Airflow orchestration operations"
+readme = "PanDAirflow.md"
 requires-python = ">=3.8"
 classifiers = [
     "Development Status :: 1 - Planning",
@@ -22,12 +22,12 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Allegheny-CountyStats/Airflow-Docker/CountyStat-Airflow"
-Issues = "https://github.com/Allegheny-CountyStats/Airflow-Docker/CountyStat-Airflow/issues"
+Homepage = "https://github.com/Allegheny-CountyStats/PanDA_Airflow"
+Issues = "https://github.com/Allegheny-CountyStats/PanDA_Airflow/issues"
 
 [build-system]
 requires = ["hatchling >= 1.26"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/CountyStatAirflow"]
+packages = ["src/PanDAirflow"]
