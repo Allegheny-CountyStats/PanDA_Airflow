@@ -6,6 +6,9 @@ from airflow.models import Variable
 
 @task.short_circuit(task_id='tableau_check')
 def tableau_check(**_):
+    """
+        :rtype: DependencyMixIn
+    """
     now = pendulum.now()  # Airflow-safe timezone-aware timestamp
 
     # Check: Is it the third Tuesday of the month?
@@ -26,6 +29,9 @@ def tableau_check(**_):
 
 @task.short_circuit(task_id="dev_ShortCircuit")
 def dev_test():
+    """
+        :rtype: DependencyMixIn
+    """
     if Variable.get('DEV_POWER_SWITCH') == "TRUE":
         host_check = True
     else:
