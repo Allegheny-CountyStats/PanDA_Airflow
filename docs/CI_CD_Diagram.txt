@@ -1,0 +1,34 @@
+                  ┌──────────────────────────────┐
+                  │     Developer writes code     │
+                  │      src/PanDAirflow/...      │
+                  └───────────────┬───────────────┘
+                                  │
+                                  ▼
+                      ┌───────────────────────┐
+                      │   Run unit tests      │
+                      │ pytest tests/unit     │
+                      └──────────┬────────────┘
+                                 │
+                                 ▼
+                       ┌───────────────────┐
+                       │ GitHub CI runs    │
+                       │   - unit tests    │
+                       │   - linting       │
+                       │   - packaging     │
+                       └─────────┬─────────┘
+                                 │
+                     Developer approves pull request
+                                 │
+                                 ▼
+                ┌────────────────────────────────────┐
+                │ Deploy dev code to Airflow VM      │
+                │  rsync → dags/dev_PanDAirflow/     │
+                │ Code hidden from UI via .airflowignore
+                └──────────────┬──────────────────────┘
+                               │
+                               ▼
+                 ┌──────────────────────────────┐
+                 │ Airflow CLI integration test │
+                 │ airflow tasks test ...        │
+                 │ Uses real Variables & DB      │
+                 └──────────────────────────────┘

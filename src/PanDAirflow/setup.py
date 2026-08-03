@@ -1,8 +1,8 @@
 from setuptools import setup, find_namespace_packages
 
-VERSION = '0.0.3'
+VERSION = '0.1.4'
 DESCRIPTION = 'Package to run Airflow tasks for a Slack Alert and Hoot Update/Verfication'
-LONG_DESCRIPTION = 'Package with functions that can be used on callback, as a python operator, or other utility within and Airflow DAG. Functions include a Slack-Alert for failed tasks and Hoot Status Alert/Update.'
+LONG_DESCRIPTION = 'Package with functions that can be used on callback, as a python operator, or other utility within and Airflow DAG.'
 
 # Setting up
 setup(
