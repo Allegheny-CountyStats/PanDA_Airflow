@@ -1,0 +1,43 @@
+OCAL DEVELOPMENT (PyCharm)
+ ────────────────────────────────────────────────────────────
+
+   [PanDAirflow/file_checkit.py]
+                 │
+                 │ (unit test calls __wrapped__)
+                 ▼
+       [mock-based unit tests]
+       tests/test_check_moveit_unit.py
+                 │
+                 ▼
+   Logic validated (no Airflow context)
+
+ ────────────────────────────────────────────────────────────
+
+ AIRFLOW INTEGRATION (VM)
+ ────────────────────────────────────────────────────────────
+
+   Upload to:
+   /home/mgradmin/airflow/dags/dev_PanDAirflow/file_checkit.py
+                 │
+                 ▼
+   test DAG:
+   /home/mgradmin/airflow/dags/dev_PanDAirflow/test_file_checkit_dag.py
+                 │
+                 ▼
+   airflow tasks test test_file_checkit check_moveit 2024-01-01
+                 │
+                 ▼
+   Airflow runtime context
+   - Variables loaded from metadata DB
+   - Connections loaded
+   - PokeReturnValue executed
+   - Logs stored in Airflow log folder
+
+ ────────────────────────────────────────────────────────────
+
+ RESULTS
+ ────────────────────────────────────────────────────────────
+ - Unit tests validate logic quickly (in PyCharm)
+ - Integration tests validate Airflow behavior (on VM)
+ - Dev code isolated from production PanDAirflow
+ - No package conflicts
