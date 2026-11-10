@@ -1,4 +1,5 @@
 import logging
+import os
 
 import requests
 from airflow.sdk import Variable
@@ -6,6 +7,23 @@ from airflow.sdk.bases.notifier import BaseNotifier
 from airflow.providers.standard.operators.hitl import HITLOperator
 
 log = logging.getLogger(__name__)
+
+# County TLS inspection re-signs outbound HTTPS with the Allegheny CA, which is in the OS bundle but not in certifi
+SYSTEM_CA_BUNDLE = '/etc/ssl/certs/ca-certificates.crt'
+
+
+def ca_bundle():
+    if os.environ.get('REQUESTS_CA_BUNDLE'):
+        return os.environ['REQUESTS_CA_BUNDLE']
+    return SYSTEM_CA_BUNDLE if os.path.exists(SYSTEM_CA_BUNDLE) else True
+
+
+def safe_reason(exc):
+    """Innermost cause (e.g. 'certificate verify failed: ...') without the request URL, which holds the webhook signature."""
+    while getattr(exc, 'reason', None) is not None or (exc.args and isinstance(exc.args[0], Exception)):
+        exc = exc.reason if getattr(exc, 'reason', None) is not None else exc.args[0]
+    msg = str(getattr(exc, 'verify_message', '') or getattr(exc, 'strerror', '') or '')
+    return f'{type(exc).__name__}: {msg}' if msg and 'http' not in msg.lower() else type(exc).__name__
 
 
 class TeamsHITLNotifier(BaseNotifier):
@@ -59,9 +77,11 @@ class TeamsHITLNotifier(BaseNotifier):
         # A failed post must not fail the HITL task; the request is still answerable in the UI
         try:
             link = HITLOperator.generate_link_to_ui_from_context(context=context)
-            resp = requests.post(Variable.get(self.variable_name), json=self.build_card(context, link), timeout=30)
+            resp = requests.post(Variable.get(self.variable_name), json=self.build_card(context, link),
+                                 timeout=30, verify=ca_bundle())
             resp.raise_for_status()
         except Exception as e:
-            # Log only the exception type and status; the webhook URL is a secret
+            # Never log str(e): requests errors include the webhook URL, which is a secret
             status = getattr(getattr(e, 'response', None), 'status_code', None)
-            log.warning('Teams notification failed (%s%s).', type(e).__name__, f', HTTP {status}' if status else '')
+            log.warning('Teams notification failed (%s%s; cause: %s).', type(e).__name__,
+                        f', HTTP {status}' if status else '', safe_reason(e))
