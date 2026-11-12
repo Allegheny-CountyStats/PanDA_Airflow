@@ -1,6 +1,6 @@
 [project]
 name = "PanDAirflow"
-version = "0.1.7"
+version = "0.1.8"
 authors = [
   { name="Daniel Andrus", email="Daniel.Andrus@AlleghenyCounty.us" },
 ]
