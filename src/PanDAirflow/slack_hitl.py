@@ -2,7 +2,7 @@ import logging
 import re
 
 from airflow.providers.slack.hooks.slack_webhook import SlackWebhookHook
-from airflow.providers.standard.operators.hitl import HITLOperator
+from .hitl_links import review_link
 from airflow.sdk import Variable
 from airflow.sdk.bases.notifier import BaseNotifier
 
@@ -62,7 +62,7 @@ class SlackHITLNotifier(BaseNotifier):
             return
         # A failed post must not fail the HITL task; the request is still answerable in the UI
         try:
-            link = HITLOperator.generate_link_to_ui_from_context(context=context)
+            link = review_link(context)
             SlackWebhookHook(slack_webhook_conn_id=self.slack_conn_id).send(**self.build_message(context, link))
         except Exception as e:
             # Never log str(e): webhook errors can include the webhook URL, which is a secret

@@ -9,7 +9,16 @@ Python package used by CountyStat for Airflow operations:
 
 ## Package Build/Update Steps
 
+Use a small python environment for uploads, for example:
+
 ```shell
+conda create -n pypackaging python=3.12 -y                                                                           
+conda activate pypackaging                                                                                           
+pip install build twine 
+```
+
+```shell
+cd "{GITHUB_HOME}\PanDA_Airflow" 
 python -m build
 python -m twine upload --verbose --repository testpypi dist/{VERSION}/*
 ```

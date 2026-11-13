@@ -4,7 +4,7 @@ import os
 import requests
 from airflow.sdk import Variable
 from airflow.sdk.bases.notifier import BaseNotifier
-from airflow.providers.standard.operators.hitl import HITLOperator
+from .hitl_links import review_link
 
 log = logging.getLogger(__name__)
 
@@ -76,7 +76,7 @@ class TeamsHITLNotifier(BaseNotifier):
             return
         # A failed post must not fail the HITL task; the request is still answerable in the UI
         try:
-            link = HITLOperator.generate_link_to_ui_from_context(context=context)
+            link = review_link(context)
             resp = requests.post(Variable.get(self.variable_name), json=self.build_card(context, link),
                                  timeout=30, verify=ca_bundle())
             resp.raise_for_status()
