@@ -2,13 +2,15 @@ import logging
 import re
 
 from airflow.providers.slack.hooks.slack_webhook import SlackWebhookHook
-from airflow.providers.standard.operators.hitl import HITLOperator
+from .hitl_links import review_link
 from airflow.sdk import Variable
 from airflow.sdk.bases.notifier import BaseNotifier
 
 log = logging.getLogger(__name__)
 
 HEX_COLOR = re.compile(r'^#?[0-9A-Fa-f]{6}$')
+# Markdown image plus one leading space, e.g. ' ![#FAC090](https://airflow/color-swatch/FAC090.svg)'
+MD_IMAGE = re.compile(r' ?!\[[^\]]*\]\([^)\s]*\)')
 
 
 class SlackHITLNotifier(BaseNotifier):
@@ -42,6 +44,8 @@ class SlackHITLNotifier(BaseNotifier):
         ]
         body = getattr(task, 'body', None)
         if body:
+            # Slack mrkdwn can't show Markdown images, and Slack can't fetch internal URLs; drop them.
+            body = MD_IMAGE.sub('', body)
             blocks.append({'type': 'section', 'text': {'type': 'mrkdwn', 'text': body[:3000]}})
         blocks.append({'type': 'actions', 'elements': [
             {'type': 'button', 'text': {'type': 'plain_text', 'text': 'Review in Airflow'}, 'url': link,
@@ -58,7 +62,7 @@ class SlackHITLNotifier(BaseNotifier):
             return
         # A failed post must not fail the HITL task; the request is still answerable in the UI
         try:
-            link = HITLOperator.generate_link_to_ui_from_context(context=context)
+            link = review_link(context)
             SlackWebhookHook(slack_webhook_conn_id=self.slack_conn_id).send(**self.build_message(context, link))
         except Exception as e:
             # Never log str(e): webhook errors can include the webhook URL, which is a secret
