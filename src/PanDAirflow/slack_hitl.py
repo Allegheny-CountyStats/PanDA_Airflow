@@ -9,6 +9,8 @@ from airflow.sdk.bases.notifier import BaseNotifier
 log = logging.getLogger(__name__)
 
 HEX_COLOR = re.compile(r'^#?[0-9A-Fa-f]{6}$')
+# Markdown image plus one leading space, e.g. ' ![#FAC090](https://airflow/color-swatch/FAC090.svg)'
+MD_IMAGE = re.compile(r' ?!\[[^\]]*\]\([^)\s]*\)')
 
 
 class SlackHITLNotifier(BaseNotifier):
@@ -42,6 +44,8 @@ class SlackHITLNotifier(BaseNotifier):
         ]
         body = getattr(task, 'body', None)
         if body:
+            # Slack mrkdwn can't show Markdown images, and Slack can't fetch internal URLs; drop them.
+            body = MD_IMAGE.sub('', body)
             blocks.append({'type': 'section', 'text': {'type': 'mrkdwn', 'text': body[:3000]}})
         blocks.append({'type': 'actions', 'elements': [
             {'type': 'button', 'text': {'type': 'plain_text', 'text': 'Review in Airflow'}, 'url': link,
